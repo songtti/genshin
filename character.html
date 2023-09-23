@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="genshin.css">
+</head>
+<body ondragstart="return false" onselectstart="return false">
+    <script src="js/item.js"></script>
+    <script src="js/food.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/menu-bar-scroll.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #222;
+        }
+    </style>
+
+    <div id="title">캐릭터</div>
+
+    <div id="menu-bar">
+        <ul>
+            <li onclick="menu_setting()">
+                <span class="icon">
+                    <ion-icon name="home"></ion-icon>
+                </span>
+                menu
+            </li>
+            <li>
+                <span class="icon">
+                    <ion-icon name="bag-handle"></ion-icon>
+                </span>
+                shop
+            </li>
+            <li>
+                <span class="icon">
+                    <ion-icon name="shirt"></ion-icon>
+                </span>
+                character
+            </li>
+        </ul>
+    </div>
+
+    <div id="menu">
+        <ul>
+            <li style="--i:6;" onclick="location.href = 'genshin.html'"><a href="genshin.html">홈</a></li>
+            <li style="--i:5;" onclick="location.href = 'character.html'"><a href="character.html">캐릭터</a></li>
+            <li style="--i:4;" onclick="location.href = 'food.html'"><a href="food.html">음식</a></li>
+            <li style="--i:3;" onclick="location.href = 'weapon.html'"><a href="weapon.html">무기</a></li>
+            <li style="--i:2;" onclick="location.href = '#'"><a href="">성유물</a></li>
+            <li style="--i:1;" onclick="location.href = '#'"><a href="">돌파재료</a></li>
+        </ul>
+    </div>
+    
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+
+        * {
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+        }
+
+        #character-display {
+            position: fixed;
+            top: -100%;
+            width: 110vh;
+            height: 60vh;
+            background: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #fff;
+            box-shadow: 0 0 15px #fff, 0 0 50px #fff,
+            0 0 30px #fff;
+            transition: all .5s;
+            z-index: -1;
+            opacity: 1;
+            /* 기본 = 3 */
+            /* 기본 = 1 */
+        }
+        #character-box {
+            position: absolute;
+            width: 40vh;
+            top: 25px;
+            left: 5vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: #fff;
+        }
+        #character-box img {
+            position: relative;
+            height: 35vh;
+            transition: all .5s;
+        }
+        #character-box img:hover {
+            scale: 1.05;
+            rotate: 5deg;
+        }
+        #character-name {
+            position: relative;
+            font-size: 2vh;
+        }
+        #character-info {
+            position: relative;
+            text-align: center;
+            font-size: 1.5vh;
+            word-break: keep-all;
+        }
+        #character-ul {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        #character-ul li {
+            position: relative;
+            margin: 10px 0 0 0;
+            text-align: center;
+            list-style: none;
+        }
+        #character-ul li {
+            text-decoration: none;
+            color: #555;
+        }
+        #character-ul li span {
+            position: relative;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+            transition: all 0.25s;
+            text-transform: uppercase;
+        }
+        #character-ul li:hover span {
+            cursor: pointer;
+            color: #fff;
+            text-shadow: 0 0 5px #fff,
+            0 0 15px #fff,
+            0 0 30px #fff,
+            0 0 60px #fff,
+            0 0 90px #fff;
+        }
+        #character-ui {
+            position: absolute;
+            height: 100%;
+            width: 60vh;
+            top: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #character-ui ul {
+            position: relative;
+            width: 65vh;
+            display: flex;
+            justify-content: center;
+            scale: 0.9;
+        }
+        #character-ui li:hover {
+            cursor: pointer;
+        }
+        #character-ui ul li {
+            position: relative;
+            list-style: none;
+            width: 15vh;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+        #character-ui ul li h5 {
+            position: relative;
+            word-break: keep-all;
+            font-size: 1.5vh;
+            color: #fff;
+            margin: 10px 0 0 0;
+        }
+        #character-ui ul li img {
+            width: 100%;
+        }
+        .limit-item-img-div {
+            position: relative;
+            width: 10vh;
+            height: 10vh;
+            overflow: hidden;
+            border-radius: 50%;
+        }
+        .limit-item-img-div .limit-item-img-display {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+            font-size: 2vh;
+            font-weight: 900;
+            opacity: 0;
+            transition: all .25s;
+            z-index: 1;
+        }
+        #character-ui li:hover .limit-item-img-div .limit-item-img-display {
+            opacity: 1;
+        }
+        #character-ui-1 {
+            position: relative;
+        }
+        #menu-bar ul li:nth-child(4) {
+            right: 330px;
+            width: 80px;
+            height: 40px;
+        }
+        #easterEgg-menu {
+            position: fixed;
+            top: 12vh;
+            right: 2vh;
+            width: 25vh;
+            height: 6vh;
+            text-align: center;
+            color: #fff;
+            display: none;
+            z-index: 6;
+        }
+        #easterEgg-menu h2 {
+            font-size: 2.5vh;
+        }
+        #easterEgg-menu ul {
+            position: absolute;
+            width: 25vh;
+            list-style: none;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        #easterEgg-menu ul li {
+            margin: 0 10px;
+        }
+        #easterEgg-menu ul li:hover {
+            cursor: pointer;
+        }
+        #easterEgg-menu ul ion-icon {
+            position: relative;
+            font-size: 4vh;
+        }
+        #easterEgg-menu ul h6 {
+            position: relative;
+            font-size: 1.2vh;
+        }
+        .canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            z-index: 5;
+        }
+
+        #all-characters-div {
+            position: absolute;
+            top: 20vh;
+            width: 80vh;
+            background: #333;
+            border-radius: 20px;
+            border-top-left-radius: 0;
+            transition: all .5s;
+        }
+        #all-characters {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            list-style: none;
+            /* overflow-y: scroll; */
+        }
+        body::-webkit-scrollbar{
+            display:none;
+        }
+        #element-selector {
+            position: absolute;
+            top: -8.4vh;
+            left: 0;
+            padding: 1.5vh 0;
+            background: #333;
+            border-radius: 20px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        #element-selector::before {
+            content: "";
+            position: absolute;
+            right: -1.5vh;
+            bottom: 0;
+            width: 1.5vh;
+            height: 1.5vh;
+            border-bottom-left-radius: 20px;
+            box-shadow: -5px 5px 0 #333;
+        }
+        #element-selector ul {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+        }
+        #element-selector ul li {
+            margin: 0 5px;
+        }
+        #element-selector ul li:hover {
+            cursor: pointer;
+        }
+        #element-selector ul li img {
+            width: 5vh;
+        }
+        #all-characters li {
+            position: relative;
+            width: 10vh;
+            height: 10vh;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 10px;
+            border: 3px solid #fff;
+            box-shadow: 10px 10px 5px rgba(0, 0, 0, .5);
+            font-size: 1.5vh;
+        }
+        .characters-hover-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #fff;
+            font-weight: 900;
+            text-shadow: 0 0 5px #fff, 0 0 15px #fff;
+            word-break: keep-all;
+            border-radius: 50%;
+            transition: all .25s;
+            opacity: 0;
+        }
+        #all-characters li:hover {
+            cursor: pointer;
+        }
+        #all-characters li:hover .character-icon {
+            scale: 1.15;
+        }
+        #all-characters li:hover .characters-hover-bg {
+            opacity: 1;
+        }
+        #all-characters li .character-icon {
+            position: absolute;
+            width: 10vh;
+            height: 10vh;
+            transition: all .25s;
+            z-index: 1;
+        }
+        #all-characters li .character-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        .close-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 3vh;
+            height: 3vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1vh;
+            z-index: 1;
+        }
+        .close-button span {
+            position: absolute;
+            width: .5vh;
+            height: 3vh;
+            background: #fff;
+            border-radius: 10px;
+        }
+        .close-button span:nth-child(1) {
+            rotate: 45deg;
+        }
+        .close-button span:nth-child(2) {
+            rotate: 135deg;
+        }
+        .close-button:hover {
+            cursor: pointer;
+        }
+    </style>
+
+    <div id="all-characters-div">
+        <div id="element-selector">
+            <ul>
+                <li onclick="select_element('all')">
+                    <img src="imgs/etc/all.png" style="filter: invert(99%) sepia(2%) saturate(296%) hue-rotate(278deg) brightness(114%) contrast(100%);">
+                </li>
+                <li onclick="select_element('pyro')">
+                    <img src="imgs/etc/pyro.png">
+                </li>
+                <li onclick="select_element('hydro')">
+                    <img src="imgs/etc/hydro.png">
+                </li>
+                <li onclick="select_element('anemo')">
+                    <img src="imgs/etc/anemo.png">
+                </li>
+                <li onclick="select_element('electro')">
+                    <img src="imgs/etc/electro.png">
+                </li>
+                <li onclick="select_element('dendro')">
+                    <img src="imgs/etc/dendro.png">
+                </li>
+                <li onclick="select_element('cyro')">
+                    <img src="imgs/etc/cyro.png">
+                </li>
+                <li onclick="select_element('geo')">
+                    <img src="imgs/etc/geo.png">
+                </li>
+            </ul>
+        </div>
+        <ul id="all-characters"></ul>
+    </div>
+    <div id="character-display">
+        <div class="close-button" onclick="close_character_display()">
+            <span></span>
+            <span></span>
+        </div>
+        <div id="character-box">
+            <img src="#" id="character-img">
+            <ul id="character-ul">
+                <li id="character-name" onclick="text_shadow(1)"></li>
+                <li id="character-info" onclick="text_shadow(2)"></li>
+            </ul>
+        </div>
+        <div id="character-ui">
+            <ul>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">1개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">9개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">9개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">6개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">18개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">30개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">36개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">168개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">46개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">9개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">63개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">114개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">18개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">66개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">93개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">18개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+                <li>
+                    <div class="limit-item-img-div">
+                        <img src="" class="limit-item-img">
+                        <div class="limit-item-img-display">3개</div>
+                    </div>
+                    <h5 class="limit-item"></h5>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="easterEgg-menu">
+        <h2>이스터에그 !</h2>
+        <ul>
+            <li onclick="changePen()">
+                <ion-icon name="color-palette-outline"></ion-icon>
+                <h6>팔래트</h6>
+            </li>
+            <li onclick="changeEraser()">
+                <ion-icon name="sparkles-outline"></ion-icon>
+                <h6>지우개</h6>
+            </li>
+            <li onclick="clearPainting()">
+                <ion-icon name="trash-outline"></ion-icon>
+                <h6>지우기</h6>
+            </li>
+        </ul>
+    </div>
+    <canvas id="jsCanvas" class="canvas"></canvas>
+    <script>
+        let easterEgg_menu = document.getElementById("easterEgg-menu")
+        let character_display = document.getElementById("character-display")
+        let character_img = document.getElementById("character-img")
+        let character_name = document.getElementById("character-name")
+        let character_info = document.getElementById("character-info")
+        let limit_item = document.querySelectorAll(".limit-item")
+        let limit_item_img = document.querySelectorAll(".limit-item-img")
+        let menu_bar = document.getElementById("menu-bar")
+        let all_characters = document.getElementById("all-characters")
+        let all_characters_div = document.getElementById("all-characters-div")
+
+        let swarp_text_1 = false
+        let swarp_text_2 = false
+        function text_shadow(num) {
+            if (num == 1 && swarp_text_1 == false) {
+                character_name.style.textShadow = "0 0 5px #fff, 0 0 15px #fff, 0 0 30px #fff, 0 0 60px #fff, 0 0 90px #fff"
+                character_name.style.color = "#fff"
+                swarp_text_1 = true
+            }
+            else if (num == 2 && swarp_text_2 == false) {
+                character_info.style.textShadow = "0 0 5px #fff, 0 0 15px #fff, 0 0 30px #fff, 0 0 60px #fff, 0 0 90px #fff"
+                character_info.style.color = "#fff"
+                swarp_text_2 = true
+            }
+            else if (num == 1 && swarp_text_1 == true) {
+                character_name.style.textShadow = ""
+                character_name.style.color = ""
+                swarp_text_1 = false
+            }
+            else if (num == 2 && swarp_text_2 == true) {
+                character_info.style.textShadow = ""
+                character_info.style.color = ""
+                swarp_text_2 = false
+            }
+        }
+
+        const canvas = document.getElementById("jsCanvas");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = document.documentElement.clientWidth;
+        canvas.height = document.documentElement.clientHeight;
+        ctx.strokeStyle = "#fff";
+        ctx.lineWidth = 2;
+
+        let painting = false;
+
+        function startPainting() {
+            painting=true;
+        }
+        function stopPainting(event) {
+            painting=false;
+        }
+        let mode = "pen"
+        function onMouseMove(event) {
+            const x = event.offsetX;
+            const y = event.offsetY;
+            if (mode == "pen") {
+                if(!painting) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                }
+                else {
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+            }
+            if(mode == "eraser"){
+                if(!painting) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                }
+                else {
+                    ctx.clearRect(x, y, 10, 10);
+                }
+            }
+        }
+
+        function changePen() {
+            ctx.strokeStyle = "#fff";
+            ctx.lineWidth = 2;
+            ctx.lineJoin = "round"
+            mode = "pen"
+            canvas.innerHTML = ("<style>.canvas:hover {cursor : url(imgs/etc/pen.png) 0 30, auto;}</style>")
+        }
+        
+        function changeEraser() {
+            mode = "eraser"
+            canvas.innerHTML = ("<style>.canvas:hover {cursor : url(imgs/etc/eraser.png) 5 25, auto;}</style>")
+        }
+
+        function clearPainting() {
+            let clearPainting_confirm = confirm("정말로 캔버스를 초기화 할까요? 모든 진행사항이 사라집니다.")
+            if (clearPainting_confirm == true) {
+                canvas.width = document.documentElement.clientWidth;
+                canvas.height = document.documentElement.clientHeight;
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 2;
+            }
+            else {
+                
+            }
+        }
+
+        let palette_on_off_value = true
+        function palette_on_off() {
+            if (palette_on_off_value == true) {
+                palette_on_off_value = false
+                canvas.style.display = "none"
+                easterEgg_menu.style.display = "none"
+                document.getElementById('palette_id').innerHTML = "<span class='icon'><ion-icon name='color-palette-outline'></ion-icon></span>OFF"
+            }
+            else {
+                palette_on_off_value = true
+                canvas.style.display = "block"
+                easterEgg_menu.style.display = "block"
+                document.getElementById('palette_id').innerHTML = "<span class='icon'><ion-icon name='color-palette-outline'></ion-icon></span>ON"
+            }
+        }
+
+        let easterEgg = 0
+        window.addEventListener("keydown", e => {
+            if (e.key == "ArrowUp" && easterEgg == 0) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowUp" && easterEgg == 1) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowDown" && easterEgg == 2) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowDown" && easterEgg == 3) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowLeft" && easterEgg == 4) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowRight" && easterEgg == 5) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowLeft" && easterEgg == 6) {
+                easterEgg++
+            }
+            else if (e.key == "ArrowRight" && easterEgg == 7) {
+                easterEgg++
+            }
+            else if (e.key == "b" && easterEgg == 8) {
+                easterEgg++
+            }
+            else if (e.key == "a" && easterEgg == 9) {
+                easterEgg++
+            }
+            else {
+                easterEgg = 0
+            }
+            if (easterEgg == 10) {
+                alert("이스터 에그 발견!")
+                easterEgg_menu.style.display = "block"
+                canvas.style.display = "block"
+                menu_bar.innerHTML = ("<ul><li onclick='menu_setting()'><span class='icon'><ion-icon name='home'></ion-icon></span>menu</li><li><span class='icon'><ion-icon name='bag-handle'></ion-icon></span>shop</li><li><span class='icon'><ion-icon name='shirt'></ion-icon></span>character</li><li onclick='palette_on_off()' id='palette_id'><span class='icon'><ion-icon name='color-palette-outline'></ion-icon></span>on</li></ul>")
+                if (canvas) {
+                    canvas.width = document.documentElement.clientWidth;
+                    canvas.height = document.documentElement.clientHeight;
+                    ctx.strokeStyle = "#fff";
+                    ctx.lineWidth = 2;
+                    canvas.addEventListener("mousemove", onMouseMove);
+                    canvas.addEventListener("mousedown", startPainting);
+                    canvas.addEventListener("mouseup", stopPainting);
+                    canvas.addEventListener("mouseleave", stopPainting);
+                    canvas.innerHTML = ("<style>.canvas:hover {cursor : url(imgs/etc/pen.png) 0 30, auto;}</style>")
+                }
+            }
+        })
+
+        
+
+        for (let i = 0; i < character.length; i++) {
+            if (character[i].stars == 5) {
+                all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+            }
+        }
+        for (let i = 0; i < character.length; i++) {
+            if (character[i].stars == 4) {
+                all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+            }
+        }
+
+        function select_element(character_element) {
+            all_characters.innerHTML = ""
+            for (let i = 0; i < character.length; i++) {
+                if (character[i].stars == 5 && character[i].element_tag == character_element) {
+                    all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+                }
+            }
+            for (let i = 0; i < character.length; i++) {
+                if (character[i].stars == 4 && character[i].element_tag == character_element) {
+                    all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+                }
+            }
+            if (character_element == "all") {
+                for (let i = 0; i < character.length; i++) {
+                    if (character[i].stars == 5) {
+                        all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+                    }
+                }
+                for (let i = 0; i < character.length; i++) {
+                    if (character[i].stars == 4) {
+                        all_characters.innerHTML += ("<li onclick=search('"+character[i].name_tag+"')><img src='imgs/icon/"+character[i].name_tag+"-icon.png' class='character-icon'><img src='imgs/etc/bg_"+character[i].stars+"star.png' class='character-bg'><div class='characters-hover-bg'>"+character[i].name+"</div></li>")
+                    }
+                }
+            }
+        }
+
+        function search(tag) {
+            for (let i = 0; i < character.length; i++) {
+                if (character[i].name_tag == tag) {
+                    character_img.src = "imgs/character/"+character[i].name_tag+"-trailer.webp"
+                    character_name.innerText = "[ "+character[i].name+" ]"
+                    character_info.innerText = character[i].info
+
+                    limit_item[0].innerText = character[i].limit_item_1
+                    limit_item[1].innerText = character[i].limit_item_2
+                    limit_item[2].innerText = character[i].limit_item_3
+                    limit_item[3].innerText = character[i].limit_item_4
+                    limit_item[4].innerText = character[i].limit_item_5
+                    limit_item[5].innerText = character[i].limit_item_6
+                    limit_item[6].innerText = character[i].limit_item_7
+                    limit_item[7].innerText = character[i].limit_item_8
+                    limit_item[8].innerText = character[i].limit_item_9
+                    limit_item[9].innerText = character[i].skill_item_1
+                    limit_item[10].innerText = character[i].skill_item_2
+                    limit_item[11].innerText = character[i].skill_item_3
+                    limit_item[12].innerText = character[i].skill_item_4
+                    limit_item[13].innerText = character[i].skill_item_5
+                    limit_item[14].innerText = character[i].skill_item_6
+                    limit_item[15].innerText = character[i].skill_item_7
+                    limit_item[16].innerText = character[i].skill_item_8
+                    for (k = 0; k < item[6].length; k++) {
+                        if (item[6][k].name == character[i].limit_item_1) {
+                            limit_item_img[0].src = "imgs/item/"+item[6][k].name_tag+".png"
+                        }
+                        if (item[6][k].name == character[i].limit_item_2) {
+                            limit_item_img[1].src = "imgs/item/"+item[6][k].name_tag+".png"
+                        }
+                        if (item[6][k].name == character[i].limit_item_3) {
+                            limit_item_img[2].src = "imgs/item/"+item[6][k].name_tag+".png"
+                        }
+                        if (item[6][k].name == character[i].limit_item_4) {
+                            limit_item_img[3].src = "imgs/item/"+item[6][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[0].length; k++) {
+                        if (item[0][k].name == character[i].limit_item_5) {
+                            limit_item_img[4].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                        if (item[0][k].name == character[i].limit_item_6) {
+                            limit_item_img[5].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                        if (item[0][k].name == character[i].limit_item_7) {
+                            limit_item_img[6].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                        if (item[0][k].name == character[i].skill_item_4) {
+                            limit_item_img[12].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                        if (item[0][k].name == character[i].skill_item_5) {
+                            limit_item_img[13].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                        if (item[0][k].name == character[i].skill_item_6) {
+                            limit_item_img[14].src = "imgs/item/"+item[0][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[5].length; k++) {
+                        if (item[5][k].name == character[i].limit_item_8) {
+                            limit_item_img[7].src = "imgs/item/"+item[5][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[2].length; k++) {
+                        if (item[2][k].name == character[i].limit_item_9) {
+                            limit_item_img[8].src = "imgs/item/"+item[2][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[4].length; k++) {
+                        if (item[4][k].name == character[i].skill_item_1) {
+                            limit_item_img[9].src = "imgs/item/"+item[4][k].name_tag+".png"
+                        }
+                        if (item[4][k].name == character[i].skill_item_2) {
+                            limit_item_img[10].src = "imgs/item/"+item[4][k].name_tag+".png"
+                        }
+                        if (item[4][k].name == character[i].skill_item_3) {
+                            limit_item_img[11].src = "imgs/item/"+item[4][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[3].length; k++) {
+                        if (item[3][k].name == character[i].skill_item_7) {
+                            limit_item_img[15].src = "imgs/item/"+item[3][k].name_tag+".png"
+                        }
+                    }
+                    for (let k = 0; k < item[6].length; k++) {
+                        if (item[6][k].name == character[i].skill_item_8) {
+                            limit_item_img[16].src = "imgs/item/"+item[6][k].name_tag+".png"
+                        }
+                    }
+                }
+            }
+            all_characters_div.style.opacity = "0"
+            // setTimeout(function() {
+            //     all_characters_div.style.display = "none"
+            // }, 500);
+            character_display.style.zIndex = 3
+            character_display.style.opacity = 1
+            character_display.style.top = "20vh"
+            let text = document.querySelectorAll('#character-name, #character-info').forEach(
+            text => {
+                text.innerHTML = text.innerText.split('').map((letters,
+                i) => `<span style="transition-delay:${i*30}ms;">${letters}</span>`).join('');
+            })
+        }
+
+        function close_character_display() {
+            all_characters_div.style.opacity = "1"
+            character_display.style.zIndex = "-1"
+            character_display.style.opacity = "0"
+            character_display.style.top = "-20vh"
+        }
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

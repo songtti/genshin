@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="genshin.css">
+    <script src="js/item.js"></script>
+    <script src="js/food.js"></script>
+    <script src="js/character.js"></script>
+    <script src="js/menu-bar-scroll.js"></script>
+</head>
+<body>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #222;
+            min-height: 500vh;
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+    <div id="title">genshin impact</div>
+    <div id="menu-bar">
+        <ul>
+            <li onclick="menu_setting()">
+                <span class="icon">
+                    <ion-icon name="home"></ion-icon>
+                </span>
+                menu
+            </li>
+            <li>
+                <span class="icon">
+                    <ion-icon name="bag-handle"></ion-icon>
+                </span>
+                shop
+            </li>
+            <li>
+                <span class="icon">
+                    <ion-icon name="shirt"></ion-icon>
+                </span>
+                character
+            </li>
+        </ul>
+    </div>
+    <div id="pickup">
+        <h2>4.0 픽업 캐릭터</h2>
+        <ul>
+            <li onclick="location.href = '#'">
+                <img src="#" id="pickup-character-img-1">
+                <div class="pickup-under-line">
+                    <h4 id="pickup-character-name-1"></h4>
+                    <h6 id="pickup-character-info-1"></h6>
+                </div>
+            </li>
+            <li onclick="location.href = '#'">
+                <img src="#" id="pickup-character-img-2">
+                <div class="pickup-under-line">
+                    <h4 id="pickup-character-name-2"></h4>
+                    <h6 id="pickup-character-info-2"></h6>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script>
+        let character_img_1 = document.getElementById("pickup-character-img-1")
+        let character_img_2 = document.getElementById("pickup-character-img-2")
+        let character_name_1 = document.getElementById("pickup-character-name-1")
+        let character_name_2 = document.getElementById("pickup-character-name-2")
+        let character_info_1 = document.getElementById("pickup-character-info-1")
+        let character_info_2 = document.getElementById("pickup-character-info-2")
+        
+        // 픽업 캐릭터
+        for (let i = 0; i < character.length; i++) {
+            if (character[i].name == "느비예트") {
+                character_img_1.src = "imgs/character/"+character[i].name_tag+".webp"
+                character_name_1.innerText = character[i].name
+                character_info_1.innerText = character[i].info
+            }
+            if (character[i].name == "호두") {
+                character_img_2.src = "imgs/character/"+character[i].name_tag+".webp"
+                character_name_2.innerText = character[i].name
+                character_info_2.innerText = character[i].info
+            }
+        }
+    </script>
+    <div id="new-update">
+        <h2>신규 업데이트</h2>
+        <div id="map">
+            <img src="#">
+            <img src="#">
+            <div id="side-bar">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Aperiam sequi in quia libero dolores maiores voluptates laborum. Provident reprehenderit, vel quos, ab qui voluptatum nemo nobis veritatis pariatur itaque voluptatem.
+            </div>
+        </div>
+    </div>
+    <div id="line-01"></div>
+
+    <div id="menu">
+        <ul>
+            <li style="--i:6;" onclick="location.href = 'genshin.html'"><a href="genshin.html">홈</a></li>
+            <li style="--i:5;" onclick="location.href = 'character.html'"><a href="character.html">캐릭터</a></li>
+            <li style="--i:4;" onclick="location.href = 'food.html'"><a href="food.html">음식</a></li>
+            <li style="--i:3;" onclick="location.href = 'weapon.html'"><a href="weapon.html">무기</a></li>
+            <li style="--i:2;" onclick="location.href = '#'"><a href="">성유물</a></li>
+            <li style="--i:1;" onclick="location.href = '#'"><a href="">돌파재료</a></li>
+        </ul>
+    </div>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>
